@@ -11,8 +11,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
-
-
 /**
  * Created on 4.01.2026
  * @author Sümeyra Özuğur
@@ -24,9 +22,6 @@ import javax.inject.Singleton
 internal object NetworkModule {
 
     private const val BASE_URL = "https://api.themoviedb.org/3/"
-
-
-
 
     @Provides
     @Singleton
@@ -57,4 +52,3 @@ internal object NetworkModule {
         }
     }
 }
-
