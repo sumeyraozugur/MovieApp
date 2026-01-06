@@ -60,4 +60,6 @@ dependencies {
     ksp("com.google.dagger:hilt-compiler:2.57.2")
 
     implementation("com.squareup.okhttp3:logging-interceptor:5.3.2")
+
+    implementation(project(":domain"))
 }
