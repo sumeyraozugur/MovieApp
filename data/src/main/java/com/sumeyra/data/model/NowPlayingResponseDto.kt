@@ -11,6 +11,6 @@ data class NowPlayingResponseDto(
     @SerializedName("dates") val dates: DatesDto ?= null,
     @SerializedName("page") val page: Int ?= null,
     @SerializedName("results") val results: List<MovieDto?> ?= null,
-    @SerializedName("total_pages")  val totalPage: Int ?= null,
-    @SerializedName("total_results")val totalResult: Int ?= null,
+    @SerializedName("total_pages")  val totalPages: Int ?= null,
+    @SerializedName("total_results")val totalResults: Int ?= null,
 )
