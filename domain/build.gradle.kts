@@ -47,5 +47,5 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     // Hilt
-    implementation("com.google.dagger:hilt-android:2.57.2")
+    implementation("com.google.dagger:hilt-android:2.57.1")
 }

@@ -8,7 +8,7 @@ class GetNowPlayingMoviesUseCase @Inject constructor(
     private val repository: MovieRepository
 )  {
 
-    suspend fun invoke(params: Int): MovieListModel {
+    suspend operator fun invoke(params: Int): MovieListModel {
         return repository.getNowPlayingMovies(params)
     }
 }

@@ -8,7 +8,7 @@ class GetMovieDetailUseCase @Inject constructor(
     private val repository: MovieRepository
 ) {
 
-    suspend fun invoke(params: Int): MovieDetailedModel {
+    suspend operator fun invoke(params: Int): MovieDetailedModel {
         return repository.getMovieDetail(params)
     }
 }
