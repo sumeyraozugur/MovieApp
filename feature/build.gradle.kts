@@ -41,6 +41,12 @@ android {
             jvmTarget.set(JvmTarget.JVM_17)
         }
     }
+
+    testOptions {
+        unitTests {
+            isReturnDefaultValues = true
+        }
+    }
 }
 
 dependencies {
@@ -71,5 +77,17 @@ dependencies {
     ksp("com.google.dagger:hilt-compiler:2.57.1")
 
     implementation("io.coil-kt:coil-compose:2.7.0")
+
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+
+    testImplementation("app.cash.turbine:turbine:1.0.0")
+
+    testImplementation("io.mockk:mockk:1.13.5")
+
+    testImplementation("org.mockito:mockito-core:5.3.1")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.0.0")
+
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
+    testImplementation(kotlin("test"))
 
 }
