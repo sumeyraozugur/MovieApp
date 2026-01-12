@@ -25,7 +25,7 @@ class MainViewModel @Inject constructor(
     }
 
 
-    fun getUpComingMovies(page: Int = 0) {
+    fun getUpComingMovies(page: Int = 1) {
         launchSafe {
             val upComingMovies = getUpcomingMoviesUseCase(page)
             setState {
