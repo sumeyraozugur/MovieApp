@@ -1,15 +1,9 @@
 package com.sumeyra.feature.movieapp.detail
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.sumeyra.domain.usecase.GetMovieDetailUseCase
+import com.sumeyra.feature.movieapp.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -21,15 +15,10 @@ import javax.inject.Inject
 class DetailViewModel @Inject constructor(
     private val getMovieDetailUseCase: GetMovieDetailUseCase,
     savedStateHandle: SavedStateHandle
-) : ViewModel() {
+) : BaseViewModel<DetailContract.State, DetailContract.Event, DetailContract.Effect>() {
 
-    private val _uiState = MutableStateFlow(DetailContract.State())
-    val uiState = _uiState.asStateFlow()
+    override fun createInitialState() = DetailContract.State()
 
-    private val _effect = Channel<DetailContract.Effect>()
-    val effect = _effect.receiveAsFlow()
-
-    private val current: DetailContract.State get() = uiState.value
 
     private val movieId: Int? = savedStateHandle["movieId"]
 
@@ -37,28 +26,20 @@ class DetailViewModel @Inject constructor(
         movieId?.let { load(it) }
     }
 
-    private fun setState(reduce: DetailContract.State.() -> DetailContract.State) {
-        _uiState.value = _uiState.value.reduce()
-    }
 
-    private fun setEffect(builder: () -> DetailContract.Effect) {
-        viewModelScope.launch { _effect.send(builder()) }
-    }
 
     fun load(id: Int) {
-        viewModelScope.launch {
-            setState { copy(isLoading = true, error = null) }
-            runCatching {
-                getMovieDetailUseCase(id)
-            }.onSuccess { movie ->
-                setState { copy(isLoading = false, movie = movie) }
-            }.onFailure { t ->
-                setState { copy(isLoading = false, error = t.message ?: "Bir hata oluştu") }
+        launchSafe(
+            loadingState = { copy(isLoading = true, error = null) }
+        ) {
+            val result = getMovieDetailUseCase(id)
+            setState {
+                copy(isLoading = false, movie = result)
             }
         }
     }
 
-    fun handleEvent(event: DetailContract.Event) {
+   override fun handleEvent(event: DetailContract.Event) {
         when (event) {
             is DetailContract.Event.Load -> load(event.movieId)
 
@@ -66,14 +47,13 @@ class DetailViewModel @Inject constructor(
                 setEffect { DetailContract.Effect.NavigateBack }
 
             DetailContract.Event.OnRetry -> {
-                val idToLoad = current.movie?.id ?: movieId
+                val idToLoad = currentState.movie?.id ?: movieId
                 idToLoad?.let { load(it) }
             }
 
             DetailContract.Event.OnDiscoverPopularClicked ->
                 setEffect { DetailContract.Effect.ShowMessage("sumeyra") }
 
-            else -> {}
         }
     }
 }

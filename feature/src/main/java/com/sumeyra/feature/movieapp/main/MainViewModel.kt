@@ -1,15 +1,9 @@
 package com.sumeyra.feature.movieapp.main
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.sumeyra.domain.usecase.GetNowPlayingMoviesUseCase
 import com.sumeyra.domain.usecase.GetUpcomingMoviesUseCase
+import com.sumeyra.feature.movieapp.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -21,43 +15,30 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase,
     private val getNowPlayingMoviesUseCase: GetNowPlayingMoviesUseCase
-) : ViewModel() {
+) : BaseViewModel<MainContract.State, MainContract.Event, MainContract.Effect>() {
 
-    private val _uiState = MutableStateFlow(MainContract.State())
-    val uiState = _uiState.asStateFlow()
-
-    private val _effect = Channel<MainContract.Effect>()
-    val effect = _effect.receiveAsFlow()
-
-    private val current: MainContract.State get() = uiState.value
+    override fun createInitialState() = MainContract.State()
 
     init {
         getNowPlayingMovies()
         getUpComingMovies()
     }
 
-    private fun setState(reduce: MainContract.State.() -> MainContract.State) {
-        _uiState.value = _uiState.value.reduce()
-    }
 
-    private fun setEffect(builder: () -> MainContract.Effect) {
-        viewModelScope.launch { _effect.send(builder()) }
-    }
-
-    fun getUpComingMovies(page: Int = 1) {
-        viewModelScope.launch {
-            val movies = getUpcomingMoviesUseCase(page)
-            val upComingMovies = movies
+    fun getUpComingMovies(page: Int = 0) {
+        launchSafe {
+            val upComingMovies = getUpcomingMoviesUseCase(page)
             setState {
-                copy(upcomingMovieList = upComingMovies.movieList,
-                    sliderMovies = movies.movieList.take(5))
+                copy(sliderMovies = upComingMovies.movieList.take(5))
             }
         }
     }
 
+
+
     fun getNowPlayingMovies(page: Int = 1, isRefresh: Boolean = false) {
-        viewModelScope.launch {
-            setState {
+        launchSafe(
+            loadingState = {
                 when {
                     isRefresh -> copy(isRefreshing = true)
                     page > 1 -> copy(isLoadingMore = true)
@@ -65,14 +46,15 @@ class MainViewModel @Inject constructor(
                 }
             }
 
-            val movieList = getNowPlayingMoviesUseCase(page)
+        ) {
+            val movieListResponse = getNowPlayingMoviesUseCase(page)
 
             setState {
                 copy(
-                    nowPlayingMovieList = if (page == 1) movieList.movieList
-                    else nowPlayingMovieList + movieList.movieList,
+                    nowPlayingMovieList = if (page == 1) movieListResponse.movieList
+                    else nowPlayingMovieList + movieListResponse.movieList,
                     page = page,
-                    pageCount = movieList.totalPage,
+                    pageCount = movieListResponse.totalPage,
                     isRefreshing = false,
                     isLoadingMore = false
                 )
@@ -80,10 +62,11 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun handleEvent(event: MainContract.Event) {
+
+    override fun handleEvent(event: MainContract.Event) {
         when (event) {
             MainContract.Event.OnLoadPage -> {
-                getNowPlayingMovies(current.page + 1)
+                getNowPlayingMovies(currentState.page + 1)
             }
             is MainContract.Event.OnMovieClicked -> {
                 setEffect { MainContract.Effect.NavigateToDetail(event.id) }

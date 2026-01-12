@@ -7,7 +7,7 @@ class MainPreviewProvider : PreviewParameterProvider<MainContract.State> {
     override val values: Sequence<MainContract.State>
         get() = sequenceOf(
             MainContract.State(
-                upcomingMovieList = listOf(
+                sliderMovies = listOf(
                     MovieModel(
                         1311031,
                         "Demon Slayer…",

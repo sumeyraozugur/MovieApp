@@ -14,7 +14,6 @@ class MainContract {
         val isLoadingMore: Boolean = false,
         val page: Int = 1,
         val pageCount: Int? = null,
-        val upcomingMovieList: List<MovieModel> = emptyList(),
         val nowPlayingMovieList: List<MovieModel> = emptyList(),
         val sliderMovies: List<MovieModel> = emptyList(),
     ) : UiState {

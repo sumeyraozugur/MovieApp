@@ -33,6 +33,7 @@ import com.sumeyra.core.ui.theme.MovieAppTheme
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun MainScreen(
+    modifier: Modifier = Modifier,
     state: MainContract.State,
     event: (MainContract.Event) -> Unit,
     onMovieClick: (String) -> Unit,
@@ -73,7 +74,7 @@ fun MainScreen(
         }
     }
 
-    Box(Modifier.pullRefresh(pullRefreshState)) {
+    Box(modifier.pullRefresh(pullRefreshState)) {
         LazyColumn(
             state = lazyListState,
             contentPadding = PaddingValues(bottom = MovieAppTheme.spacing.md),
@@ -81,8 +82,8 @@ fun MainScreen(
         ) {
             item(key = "upcoming_slider") {
                MovieUpcomingSlider(movies = state.sliderMovies,
-                   onMovieClick = { clicked->
-                       event(MainContract.Event.OnMovieClicked(clicked.toString()))
+                   onMovieClick = {
+                       event(MainContract.Event.OnMovieClicked(this.toString()))
 
                    })
            }

@@ -18,7 +18,7 @@ import com.sumeyra.domain.model.MovieModel
 fun MovieUpcomingSlider(
     modifier: Modifier = Modifier,
     movies: List<MovieModel>,
-    onMovieClick: (Int) -> Unit
+    onMovieClick: Int.() -> Unit
 ) {
     val pagerState = rememberPagerState(pageCount = { movies.size })
 
@@ -34,7 +34,7 @@ fun MovieUpcomingSlider(
             val movie = movies[page]
             SliderItem(
                 movie = movie,
-                onClick = { movie.id?.let { onMovieClick(it) } }
+                onClick = { movie.id?.onMovieClick() }
             )
         }
 

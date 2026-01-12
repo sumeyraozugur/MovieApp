@@ -23,11 +23,12 @@ import com.sumeyra.domain.model.MovieModel
 
 @Composable
 fun SliderItem(
+    modifier: Modifier = Modifier,
     movie: MovieModel,
     onClick: () -> Unit
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .clickable(onClick = onClick)
     ) {
@@ -76,6 +77,4 @@ fun SliderItem_Preview() {
         ""
     )
     SliderItem(movie = movie, onClick = {})
-
-
 }
