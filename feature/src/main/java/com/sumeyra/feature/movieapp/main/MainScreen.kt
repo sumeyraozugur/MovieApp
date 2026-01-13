@@ -21,6 +21,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.sumeyra.core.ui.theme.MovieAppTheme
@@ -58,44 +61,49 @@ fun MainScreen(
     val isAtEndOfList by remember {
         derivedStateOf {
             val layoutInfo = lazyListState.layoutInfo
-            val visibleItemsInfo = layoutInfo.visibleItemsInfo
             if (layoutInfo.totalItemsCount == 0) return@derivedStateOf false
 
-            val lastVisibleItem = visibleItemsInfo.lastOrNull() ?: return@derivedStateOf false
+            val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull() ?: return@derivedStateOf false
             val viewportEndOffset = layoutInfo.viewportEndOffset
             (lastVisibleItem.index >= layoutInfo.totalItemsCount - 3) &&
                     (lastVisibleItem.offset + lastVisibleItem.size <= viewportEndOffset)
         }
     }
 
-    LaunchedEffect(isAtEndOfList) {
+    LaunchedEffect(isAtEndOfList, state.canLoadMore, state.isLoadingMore, state.isRefreshing) {
         if (isAtEndOfList && state.canLoadMore && !state.isLoadingMore && !state.isRefreshing) {
             event(MainContract.Event.OnLoadPage)
         }
     }
 
-    Box(modifier.pullRefresh(pullRefreshState)) {
+    Box(
+        modifier = modifier
+            .semantics { testTagsAsResourceId = true }   // <-- Maestro id görsün
+            .pullRefresh(pullRefreshState)
+    ) {
         LazyColumn(
             state = lazyListState,
             contentPadding = PaddingValues(bottom = MovieAppTheme.spacing.md),
             modifier = Modifier.fillMaxSize()
         ) {
             item(key = "upcoming_slider") {
-               MovieUpcomingSlider(movies = state.sliderMovies,
-                   onMovieClick = {
-                       event(MainContract.Event.OnMovieClicked(this.toString()))
-
-                   })
-           }
-
+                Box(Modifier.testTag("upcoming_slider")) {
+                    MovieUpcomingSlider(
+                        movies = state.sliderMovies,
+                        onMovieClick = {
+                            event(MainContract.Event.OnMovieClicked(this.toString()))
+                        }
+                    )
+                }
+            }
 
             if (state.nowPlayingMovieList.isNotEmpty()) {
-                itemsIndexed(state.nowPlayingMovieList) { _, movie ->
+                itemsIndexed(state.nowPlayingMovieList) { index, movie ->
                     MovieListItem(
                         movie = movie,
-                        onClick = { clicked ->
-                            event(MainContract.Event.OnMovieClicked(clicked))
-
+                        modifier = Modifier.testTag("movie_item_$index"),
+                        onClick = { clickedId ->
+                            event(MainContract.Event.OnMovieClicked(clickedId))
                         }
                     )
                 }

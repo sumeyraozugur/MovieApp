@@ -1,0 +1,34 @@
+appId: com.sumeyra.movieapp
+---
+- launchApp
+
+- extendedWaitUntil:
+    visible:
+      id: "movie_item_0"
+    timeout: 10000
+
+
+- scrollUntilVisible:
+    element:
+      id: "movie_item_5"
+    direction: DOWN
+    timeout: 20000
+
+
+- tapOn:
+    id: "movie_item_5"
+
+
+- assertVisible: "Özet"
+
+
+- tapOn:
+    id: "discover_button"
+
+- assertVisible: "sumeyra"
+
+- back
+- scrollUntilVisible:
+    element:
+      id: "movie_item_0"
+    direction: UP

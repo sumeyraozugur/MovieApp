@@ -24,6 +24,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,7 +56,9 @@ fun DetailScreen(
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .semantics { testTagsAsResourceId = true }) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(bottom = MovieAppTheme.spacing.section72)
@@ -66,6 +71,7 @@ fun DetailScreen(
                         modifier = Modifier
                             .align(Alignment.TopStart)
                             .statusBarsPadding()
+                            .testTag("back_button")
                     ) {
                         Icon(
                             modifier = Modifier.size(MovieAppTheme.spacing.section36),
@@ -103,6 +109,7 @@ fun DetailScreen(
                     Text(
                         text = state.movie?.title ?: "",
                         style = MaterialTheme.typography.headlineMedium,
+                        modifier = Modifier.testTag("movie_detail_title"),
                         fontWeight = FontWeight.Bold
                     )
 
@@ -129,6 +136,7 @@ fun DetailScreen(
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
                 .navigationBarsPadding()
+                .testTag("discover_button")
                 .padding(horizontal = MovieAppTheme.spacing.lg),
             onClick = {
                 event(DetailContract.Event.OnDiscoverPopularClicked)
