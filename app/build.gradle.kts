@@ -4,8 +4,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("com.google.devtools.ksp")
-    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -66,14 +66,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(project(":feature"))
     implementation(project(":core"))
-
-    // Navigation & Lifecycle Compose
-    implementation("androidx.navigation:navigation-compose:2.9.3")
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.9.2") // <-- tek kez
-
-    // Hilt
-    implementation("com.google.dagger:hilt-android:2.57.1")
-    ksp("com.google.dagger:hilt-compiler:2.57.1")
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    ksp(libs.hilt.compiler)
 
 }
