@@ -1,10 +1,24 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
+import kotlin.apply
 
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
 }
+
+val props = Properties().apply {
+    val f = rootProject.file("local.properties")
+    if (f.exists()) load(f.inputStream())
+}
+val tmdbBearer: String = props.getProperty("TMDB_BEARER")
+    ?: System.getenv("TMDB_BEARER")
+    ?: ""
+
+val tmdbBaseUrl: String = props.getProperty("TMDB_BASE_URL")
+    ?: System.getenv("TMDB_BASE_URL")
+    ?: "https://api.themoviedb.org/3/"
 
 android {
     namespace = "com.sumeyra.data"
@@ -15,6 +29,9 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+        buildConfigField("String", "TMDB_BEARER", "\"$tmdbBearer\"")
+        buildConfigField("String", "TMDB_BASE_URL", "\"$tmdbBaseUrl\"")
 
     }
 

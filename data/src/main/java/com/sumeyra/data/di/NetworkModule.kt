@@ -1,5 +1,6 @@
 package com.sumeyra.data.di
 
+import com.sumeyra.data.BuildConfig
 import com.sumeyra.data.intercepter.AuthenticationInterceptor
 import dagger.Module
 import dagger.Provides
@@ -21,7 +22,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 internal object NetworkModule {
 
-    private const val BASE_URL = "https://api.themoviedb.org/3/"
+    private const val BASE_URL = BuildConfig.TMDB_BASE_URL
 
     @Provides
     @Singleton
