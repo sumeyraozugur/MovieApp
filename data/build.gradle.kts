@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
+    //id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 val props = Properties().apply {
@@ -69,7 +71,9 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.retrofit)
-    implementation(libs.retrofit.converter)
+    implementation(libs.retrofit)
+    implementation(libs.kotlinx.serialization)
+    implementation(libs.retrofit.serialization)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.android)
     implementation(libs.okhttp.logging)

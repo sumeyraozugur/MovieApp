@@ -1,8 +1,11 @@
 package com.sumeyra.data.model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+
+@Serializable
 data class DatesDto(
-    @SerializedName("maximum") val maximum : String ?= null,
-    @SerializedName("minimum") val minimum:String ?= null,
+    @SerialName("maximum") val maximum : String ?= null,
+    @SerialName("minimum") val minimum:String ?= null,
 )

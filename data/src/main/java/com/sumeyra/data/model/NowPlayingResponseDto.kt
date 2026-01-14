@@ -1,16 +1,17 @@
 package com.sumeyra.data.model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * Created on 4.01.2026
  * @author Sümeyra Özuğur
  */
-
+@Serializable
 data class NowPlayingResponseDto(
-    @SerializedName("dates") val dates: DatesDto ?= null,
-    @SerializedName("page") val page: Int ?= null,
-    @SerializedName("results") val results: List<MovieDto?> ?= null,
-    @SerializedName("total_pages")  val totalPages: Int ?= null,
-    @SerializedName("total_results")val totalResults: Int ?= null,
+    @SerialName("dates") val dates: DatesDto ?= null,
+    @SerialName("page") val page: Int ?= null,
+    @SerialName("results") val results: List<MovieDto?> ?= null,
+    @SerialName("total_pages")  val totalPages: Int ?= null,
+    @SerialName("total_results")val totalResults: Int ?= null,
 )
