@@ -1,6 +1,6 @@
 package com.sumeyra.data.mapper
 
-import com.sumeyra.data.model.MovieDetailResponse
+import com.sumeyra.data.model.MovieDetailDto
 import com.sumeyra.data.util.buildImageUrl
 import com.sumeyra.data.util.getMovieTitleWithDate
 import com.sumeyra.domain.model.MovieDetailedModel
@@ -10,7 +10,7 @@ import com.sumeyra.domain.model.MovieDetailedModel
  * @author Sümeyra Özuğur
  */
 
-internal fun MovieDetailResponse.toDomainModel(): MovieDetailedModel {
+internal fun MovieDetailDto.toDomainModel(): MovieDetailedModel {
 
     return MovieDetailedModel(
         id = id,

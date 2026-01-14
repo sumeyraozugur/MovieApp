@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 
 @Serializable
-internal data class MovieDetailResponse(
+internal data class MovieDetailDto(
     @SerialName("original_language") val originalLanguage: String? = null,
     @SerialName("imdb_id") val imdbId: String? = null,
     @SerialName("video") val video: Boolean? = null,

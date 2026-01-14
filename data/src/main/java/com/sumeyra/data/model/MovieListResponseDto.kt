@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
  * @author Sümeyra Özuğur
  */
 @Serializable
-data class NowPlayingResponseDto(
+data class MovieListResponseDto(
     @SerialName("dates") val dates: DatesDto ?= null,
     @SerialName("page") val page: Int ?= null,
     @SerialName("results") val results: List<MovieDto?> ?= null,
